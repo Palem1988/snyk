@@ -147,7 +147,7 @@ async function monitor(...args0: any[]): Promise<any> {
       const monOutputs: string[] = [];
       for (const depRootDeps of perDepRootResults) {
         const res = await promiseOrCleanup(
-          snykMonitor(path, meta, depRootDeps),
+          snykMonitor(path, meta, depRootDeps, targetFile),
           spinner.clear(postingMonitorSpinnerLabel));
 
         await spinner.clear(postingMonitorSpinnerLabel)(res);
