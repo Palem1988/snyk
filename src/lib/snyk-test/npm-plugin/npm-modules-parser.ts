@@ -1,10 +1,11 @@
 import * as path from 'path';
-import * as snyk from '../..';
+import * as snyk from '../../index';
 import * as spinner from '../../spinner';
 import * as analytics from '../../analytics';
 import * as fs from 'then-fs';
+import {PkgTree} from 'snyk-nodejs-lockfile-parser';
 
-export async function getDependenciesFromNodeModules(root, options, targetFile): Promise<any> {
+export async function parse(root, targetFile, options): Promise<PkgTree> {
   const nodeModulesPath = path.join(
     path.dirname(path.resolve(root, targetFile)),
     'node_modules',

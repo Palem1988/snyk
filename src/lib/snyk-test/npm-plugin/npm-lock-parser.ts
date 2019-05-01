@@ -8,7 +8,7 @@ import * as analytics from '../../analytics';
 import * as fs from 'fs';
 import * as lockFileParser from 'snyk-nodejs-lockfile-parser';
 
-export async function generateDependenciesFromLockfile(root, options, targetFile) {
+export async function parse(root, targetFile, options) {
   const lockFileFullPath = path.resolve(root, targetFile);
   if (!fs.existsSync(lockFileFullPath)) {
     throw new Error('Lockfile ' + targetFile + ' not found at location: ' +
