@@ -1,7 +1,5 @@
-export interface GitInfo {
-  repo: string;
-  owner: string;
+export interface GitTarget {
+  user: string;
+  project: string;
   branch: string;
-  commitSha: string;
-  targetFile: string;
 }

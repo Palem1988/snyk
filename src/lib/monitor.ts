@@ -8,7 +8,7 @@ import * as isCI from './is-ci';
 import * as analytics from './analytics';
 import { SingleDepRootResult, MonitorError } from './types';
 import * as projectMetadata from './project-metadata';
-import { GitInfo } from './project-metadata/types';
+import { GitTarget } from './project-metadata/types';
 
 // TODO(kyegupov): clean up the type, move to snyk-cli-interface repository
 
@@ -57,7 +57,9 @@ export function monitor(root, meta, info: SingleDepRootResult, targetFile): Prom
     }).then(async (policy) => {
       analytics.add('packageManager', packageManager);
 
-      const gitTarget = await projectMetadata.getInfo('git', root, targetFile) as GitInfo;
+      const projectTarget = await projectMetadata.getInfo(pkg);
+
+      console.log({ projectTarget })
 
       // TODO(kyegupov): async/await
       return new Promise((resolve, reject) => {
@@ -79,7 +81,7 @@ export function monitor(root, meta, info: SingleDepRootResult, targetFile): Prom
               dockerImageId: pluginMeta.dockerImageId,
               dockerBaseImage: pkg.docker ? pkg.docker.baseImage : undefined,
               projectName: meta['project-name'],
-              gitTarget,
+              projectTarget,
             },
             policy: policy.toString(),
             package: pkg,
