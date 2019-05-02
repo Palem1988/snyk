@@ -1,5 +1,4 @@
 export interface GitTarget {
-  user: string;
-  project: string;
+  name: string;
   branch: string;
 }

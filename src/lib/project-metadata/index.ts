@@ -1,14 +1,17 @@
-import * as gitMetadata from './git';
-import subProcess = require('../sub-process');
+import * as gitTargetBuilder from './target-builders/git';
 import { GitTarget } from './types';
 
+const TARGET_BUILDERS = [
+  gitTargetBuilder,
+];
+
 export async function getInfo(packageInfo): Promise<GitTarget|null> {
-  // This is meant to be a factory once we introduce more flavours like Docker for example
-  // currently only handles git. The docker is just an example on how to expand it
-  if (packageInfo.docker) {
-    return null;
-  } else if ((await subProcess.execute('git', ['remote', 'get-url', 'origin'])).trim()) {
-    return gitMetadata.getInfo();
+  for (const builder of TARGET_BUILDERS) {
+    const target = await builder.getInfo(packageInfo);
+
+    if (target) {
+      return target;
+    }
   }
 
   return null;

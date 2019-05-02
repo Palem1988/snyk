@@ -8,7 +8,6 @@ import * as isCI from './is-ci';
 import * as analytics from './analytics';
 import { SingleDepRootResult, MonitorError } from './types';
 import * as projectMetadata from './project-metadata';
-import { GitTarget } from './project-metadata/types';
 
 // TODO(kyegupov): clean up the type, move to snyk-cli-interface repository
 
@@ -57,9 +56,7 @@ export function monitor(root, meta, info: SingleDepRootResult, targetFile): Prom
     }).then(async (policy) => {
       analytics.add('packageManager', packageManager);
 
-      const projectTarget = await projectMetadata.getInfo(pkg);
-
-      console.log({ projectTarget })
+      const target = await projectMetadata.getInfo(pkg);
 
       // TODO(kyegupov): async/await
       return new Promise((resolve, reject) => {
@@ -81,13 +78,13 @@ export function monitor(root, meta, info: SingleDepRootResult, targetFile): Prom
               dockerImageId: pluginMeta.dockerImageId,
               dockerBaseImage: pkg.docker ? pkg.docker.baseImage : undefined,
               projectName: meta['project-name'],
-              projectTarget,
             },
             policy: policy.toString(),
             package: pkg,
             // we take the targetFile from the plugin,
             // because we want to send it only for specific package-managers
             targetFile: pluginMeta.targetFile,
+            target,
           } as MonitorBody,
           gzip: true,
           method: 'PUT',
